@@ -176,6 +176,51 @@ describe("SubstitutionRange", () => {
 		expect(r.accept()).toBe("new");
 		expect(r.reject()).toBe("old");
 	});
+
+	test("substitution with metadata at non-zero offset", () => {
+		// Document: "Some text {~~{"author":"Bob"}@@hello~>world~~}"
+		// Substitution starts at position 10
+		const text = '{~~{"author":"Bob"}@@hello~>world~~}';
+		const from = 10;
+		// @@ is at index 19 in text, so absolute position = 10 + 19 = 29
+		const metadataPos = from + 19;
+		// ~> is at index 26 in text, so absolute position = 10 + 26 = 36
+		const middle = from + 26;
+		const to = from + text.length; // 46
+		const r = makeSubstitution(from, middle, to, text, metadataPos);
+		expect(r.fields.author).toBe("Bob");
+		expect(r.accept()).toBe("world");
+		expect(r.reject()).toBe("hello");
+	});
+
+	// ─── Issue #1: Defensive validation for invalid middle ───
+
+	test("SubstitutionRange with invalid middle (before content start) warns", () => {
+		const text = "{~~old~>new~~}";
+		const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+		// middle=1 is inside the opening bracket {~~, which is invalid
+		const r = makeSubstitution(0, 1, 14, text);
+		expect(warnSpy).toHaveBeenCalledWith(
+			expect.stringContaining("Invalid substitution")
+		);
+		// Should return safe empty strings rather than corrupted slices
+		expect(r.accept()).toBe("");
+		expect(r.reject()).toBe("");
+		warnSpy.mockRestore();
+	});
+
+	test("SubstitutionRange with invalid middle (after content end) warns", () => {
+		const text = "{~~old~>new~~}";
+		const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+		// middle=12 is inside the closing bracket ~~}, which is invalid
+		const r = makeSubstitution(0, 12, 14, text);
+		expect(warnSpy).toHaveBeenCalledWith(
+			expect.stringContaining("Invalid substitution")
+		);
+		expect(r.accept()).toBe("");
+		expect(r.reject()).toBe("");
+		warnSpy.mockRestore();
+	});
 });
 
 describe("HighlightRange", () => {

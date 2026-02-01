@@ -171,7 +171,13 @@ function constructRangeFromSyntaxNode(settings: PluginSettings, range: SyntaxNod
 	let middle = undefined;
 	if (range.type.name === "Substitution") {
 		const child = metadata ? range.firstChild?.nextSibling : range.firstChild;
-		if (!child || child.type.name !== "MSub") return;
+		if (!child || child.type.name !== "MSub") {
+			console.warn(
+				`CriticMarkup: Substitution at [${range.from}, ${range.to}] dropped — ` +
+				`~> separator not found by parser. Markup will appear as literal text.`
+			);
+			return;
+		}
 		middle = child.from;
 	}
 
