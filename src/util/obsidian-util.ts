@@ -152,7 +152,7 @@ export function showProgressBarNotice(initialMessage: string, finishedMessage: s
 		notice.messageEl.appendChild(createEl("span", { cls: "u-small", text: description }));
 	}
 
-	let progressBar = createEl("progress");
+	const progressBar = createEl("progress");
 	progressBar.value = 0;
 	progressBar.max = numOperations;
 	notice.messageEl.appendChild(progressBar);

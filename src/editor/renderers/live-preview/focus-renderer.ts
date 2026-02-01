@@ -10,7 +10,7 @@ export const markupFocusState = StateField.define<MarkupFocus>({
     },
 
     update(value, tr) {
-        for (let e of tr.effects) {
+        for (const e of tr.effects) {
             if (e.is(markupFocusEffect)) {
                 return e.value;
             }

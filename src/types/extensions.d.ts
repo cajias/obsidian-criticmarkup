@@ -1,6 +1,8 @@
-import IntervalTree, { Node } from "@flatten-js/interval-tree";
-import CommentatorPlugin from "../main";
-import { PluginsPluginsRecord } from "obsidian-typings";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type IntervalTree from "@flatten-js/interval-tree";
+import type { Node } from "@flatten-js/interval-tree";
+import type CommentatorPlugin from "../main";
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 declare module "@flatten-js/interval-tree" {
 	export default interface IntervalTree<T = unknown> {
@@ -15,7 +17,7 @@ declare module "@flatten-js/interval-tree" {
 		tree_search_nearest_forward(node: Node<T>, search_node: Node): Node<T> | null;
 	}
 
-	export interface Node<T = unknown> {
+	export interface Node<_T = unknown> {
 		max: Interval;
 
 		not_intersect_left_subtree(search_node: Node): boolean;

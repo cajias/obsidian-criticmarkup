@@ -180,6 +180,7 @@ export const editor_commands: (plugin: CommentatorPlugin) => ECommand[] = (plugi
 		name: "Generate text diff from clipboard",
 		icon: "diff",
 		editor_context: true,
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		regular_callback: async (editor: Editor, _) => {
 			const newText = await navigator.clipboard.readText();
 			const ranges = editor.cm.state.field(rangeParser).ranges;
@@ -204,6 +205,7 @@ export const editor_commands: (plugin: CommentatorPlugin) => ECommand[] = (plugi
 		name: Platform.isMacOS ? "Duplicate current file without markup" : "Make a copy of the current file without markup",
 		icon: "copy",
 		editor_context: true,
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		regular_callback: async (editor: Editor, view: MarkdownView) => {
 			if (view.file) {
 				const new_path = plugin.app.vault.getAvailablePath(pathWithoutExtension(view.file.path), view.file.extension)
@@ -229,6 +231,7 @@ export const application_commmands = (plugin: CommentatorPlugin): ECommand[] => 
 		id: "view",
 		name: "Open global annotation view",
 		icon: "comment",
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		regular_callback: async () => {
 			await plugin.activateView();
 		},

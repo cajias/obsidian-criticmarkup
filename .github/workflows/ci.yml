@@ -7,8 +7,27 @@ on:
     branches: [main, master]
 
 jobs:
-  # Lint job will be added by PR #12 (ESLint flat config migration).
-  # The current .eslintrc.cjs on main crashes ESLint due to svelte plugin incompatibility.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Cache bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Lint
+        run: bun run lint
 
   typecheck:
     name: Typecheck

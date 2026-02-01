@@ -2,7 +2,6 @@ import {type DatabaseEntry} from "../../../database";
 import {SuggestionType, type CriticMarkupRange, type CommentRange} from "../../../editor/base";
 import type CommentatorPlugin from "../../../main";
 import {prepareSimpleSearch, TFile} from "obsidian";
-import {search} from "@codemirror/search";
 
 export const enum SuggestionTypeFilter { ALL, ADDITION, DELETION, SUBSTITUTION, HIGHLIGHT, COMMENT }
 

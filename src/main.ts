@@ -1,10 +1,10 @@
 import {
     type MarkdownFileInfo, type MarkdownPostProcessor,
 	MarkdownPreviewRenderer, MarkdownView,
-	Notice, Plugin, TFile,
+	Notice, Plugin,
 } from "obsidian";
 
-import { type EditorState, type Extension, Prec, StateField} from "@codemirror/state";
+import { type EditorState, type Extension, Prec} from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { type PluginSettings } from "./types";
 
@@ -108,7 +108,8 @@ export default class CommentatorPlugin extends Plugin {
 		if (this.settings.annotation_gutter) {
 			const annotation_gutter = annotationGutter(this);
 			// FIXME: Bad. Bad. Bad. This is drivel of the highest degree.
-			this.annotation_gutter_config = (annotation_gutter as unknown as any)[1][1].value;
+			this.annotation_gutter_config = // eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(annotation_gutter as unknown as any)[1][1].value;
 			this.editorExtensions.push(annotationGutterCompartment.of(Prec.low(annotation_gutter)));
 		}
 
@@ -282,7 +283,8 @@ export default class CommentatorPlugin extends Plugin {
 
 					// EXPL: Migrate settings from 0.2.x to 0.2.3, suggestion and comment gutter settings were renamed
 					if (old_version.localeCompare("0.2.3", undefined, {numeric: true}) < 0) {
-						if ((new_settings as unknown as any).suggestion_gutter_hide_empty) {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					if ((new_settings as unknown as any).suggestion_gutter_hide_empty) {
 							const settings_migrations = [
 								["suggestion_gutter", "diff_gutter"],
 								["suggestion_gutter_hide_empty", "diff_gutter_hide_empty"],
@@ -311,7 +313,7 @@ export default class CommentatorPlugin extends Plugin {
 					this.settings.version = DEFAULT_SETTINGS.version;
 					await this.setSettings();
 				}
-			} catch (e) {
+			} catch {
 				new Notice("Commentator: Migration to new settings failed, using the default settings provided by the plugin", 0);
 			}
 		}
@@ -321,6 +323,7 @@ export default class CommentatorPlugin extends Plugin {
 		await this.migrateSettings(await this.loadData());
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async onunload() {
 		this.previewModeHeaderButton.detachButtons();
 		this.editModeHeaderModeButton.detachButtons();

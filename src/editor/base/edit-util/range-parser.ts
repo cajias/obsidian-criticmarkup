@@ -101,7 +101,7 @@ export const rangeParser: StateField<ParserData> = StateField.define({
 		// apply-offsets: 2.72-3.70 ms
 		const nil_node = value.ranges.tree.nil_node;
 		function visitNode(node: Node<CriticMarkupRange>) {
-			if (node != null && node != nil_node) {
+			if (node !== null && node !== nil_node) {
 				visitNode(node.left);
 				while (offsets.length && node.item.key.low >= offsets[0][0])
 					cumulative_offset += offsets.shift()![1];
@@ -109,9 +109,9 @@ export const rangeParser: StateField<ParserData> = StateField.define({
 				node.item.key.low = node.item.value.from;
 				node.item.key.high = node.item.value.to;
 				visitNode(node.right);
-				if (node.left != nil_node)
+				if (node.left !== nil_node)
 					node.max.low = node.left.max.low;
-				if (node.right != nil_node)
+				if (node.right !== nil_node)
 					node.max.high = node.right.max.high;
 			}
 		}
