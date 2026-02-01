@@ -5,8 +5,7 @@ module.exports = {
 	collectCoverage: false,
 
 	transform: {
-		'^.+\\.ts$': 'ts-jest',
-		"^.+\\.(js|jsx)$": "esbuild-jest"
+		"^.+\\.(ts|js|jsx)$": "esbuild-jest"
 	},
 
 
