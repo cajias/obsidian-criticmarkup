@@ -88,6 +88,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 
 	author: "",
 
+	remove_comments_on_accept: true,
+
 	suggestion_mode_operations: {
 		cursor_movement: {
 			[SuggestionType.ADDITION]: RANGE_CURSOR_MOVEMENT_OPTION.IGNORE_METADATA,

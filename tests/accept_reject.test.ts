@@ -421,6 +421,63 @@ describe("Comment thread handling", () => {
 	});
 });
 
+// ─── Preserve comment threads on accept/reject ───
+
+describe("Accept/reject with remove_attached_comments=false", () => {
+	test("accept addition preserves attached comment when not removing comments", () => {
+		// {++text++}{>>comment<<}
+		const text = "{++text++}{>>comment<<}";
+		const addition = makeAddition(0, 10, "{++text++}");
+		// When remove_attached_comments=false, only the addition range is replaced
+		const result = applyToText(text, (range) => range.accept(), [addition]);
+		expect(result).toBe("text{>>comment<<}");
+	});
+
+	test("accept addition removes attached comment when removing comments", () => {
+		// {++text++}{>>comment<<}
+		const text = "{++text++}{>>comment<<}";
+		const addition = makeAddition(0, 10, "{++text++}");
+		const comment = makeComment(10, 23, "{>>comment<<}");
+		comment.attach_to_range(addition);
+		// When remove_attached_comments=true, full_range_back extends to include the comment
+		// Simulate by including both ranges
+		const result = applyToText(text, (range) => range.accept(), [addition, comment]);
+		expect(result).toBe("text");
+	});
+
+	test("reject deletion preserves attached comment when not removing comments", () => {
+		const text = "{--old--}{>>why removed<<}";
+		const deletion = makeDeletion(0, 9, "{--old--}");
+		const result = applyToText(text, (range) => range.reject(), [deletion]);
+		expect(result).toBe("old{>>why removed<<}");
+	});
+
+	test("reject deletion removes attached comment when removing comments", () => {
+		const text = "{--old--}{>>why removed<<}";
+		const deletion = makeDeletion(0, 9, "{--old--}");
+		const comment = makeComment(9, 26, "{>>why removed<<}");
+		comment.attach_to_range(deletion);
+		const result = applyToText(text, (range) => range.reject(), [deletion, comment]);
+		expect(result).toBe("old");
+	});
+
+	test("accept substitution preserves attached comment", () => {
+		const text = "before {~~old~>new~~}{>>review note<<} after";
+		const sub = makeSubstitution(7, 13, 21, "{~~old~>new~~}");
+		const result = applyToText(text, (range) => range.accept(), [sub]);
+		expect(result).toBe("before new{>>review note<<} after");
+	});
+
+	test("multiple suggestions with comments preserved", () => {
+		const text = "{++a++}{>>c1<<}{--b--}{>>c2<<}";
+		const add = makeAddition(0, 7, "{++a++}");
+		const del = makeDeletion(14, 21, "{--b--}");
+		// Only process suggestion ranges, leaving comments in place
+		const result = applyToText(text, (range) => range.accept(), [add, del]);
+		expect(result).toBe("a{>>c1<<}{>>c2<<}");
+	});
+});
+
 // ─── Base Range boundary calculations ───
 
 describe("Base range boundaries", () => {

@@ -28,7 +28,7 @@ export function onContextMenu(
                 .setIcon("check")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => range.accept())));
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => range.accept()), plugin.settings.remove_comments_on_accept));
         });
         menu.addItem((item) => {
             item
@@ -36,7 +36,7 @@ export function onContextMenu(
                 .setIcon("cross")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => range.reject())))
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => range.reject()), plugin.settings.remove_comments_on_accept))
         });
     } else if (used_types.size === 1 && used_types.has(SuggestionType.COMMENT)) {
         menu.addItem((item) => {

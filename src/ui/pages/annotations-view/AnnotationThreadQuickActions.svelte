@@ -44,13 +44,13 @@
 		{:else if entry.range.type !== SuggestionType.HIGHLIGHT}
 			<Button
                 icon="check"
-                tooltip={"Accept change" + (entry.range.replies.length ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()))}
+                tooltip={"Accept change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept ? " (and delete thread)" : "")}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()), plugin.settings.remove_comments_on_accept)}
 			/>
 			<Button
                 icon="cross"
-                tooltip={"Reject change" + (entry.range.replies.length ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.reject()))}
+                tooltip={"Reject change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept ? " (and delete thread)" : "")}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.reject()), plugin.settings.remove_comments_on_accept)}
 			/>
 		{/if}
 
