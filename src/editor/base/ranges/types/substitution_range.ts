@@ -203,7 +203,7 @@ export class SubstitutionRange extends CriticMarkupRange {
 
 	cursor_move_inside(cursor: number, skip_metadata = false) {
 		cursor = super.cursor_move_inside(cursor, skip_metadata);
-		if (cursor == this.middle + 1)
+		if (cursor === this.middle + 1)
 			cursor = this.middle + 2;
 		return cursor;
 	}

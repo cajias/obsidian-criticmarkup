@@ -15,7 +15,8 @@ export async function applyRangeEditsToVault(plugin: CommentatorPlugin, ranges: 
     }
 
     let idx = 0;
-    for (let [path, ranges] of Object.entries(grouped_ranges)) {
+    for (const [path, initialRanges] of Object.entries(grouped_ranges)) {
+        let ranges = initialRanges;
         const file = plugin.app.vault.getAbstractFileByPath(path);
         if (!file || !(file instanceof TFile)) {
             continue;

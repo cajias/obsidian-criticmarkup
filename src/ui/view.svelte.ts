@@ -55,7 +55,7 @@ export class CommentatorAnnotationsView extends ItemView {
 	}
 
 	getState() {
-		const { plugin, ...props } = this.props;
+		const { plugin: _plugin, ...props } = this.props;
 		return {
 			...super.getState(),
 			...props,

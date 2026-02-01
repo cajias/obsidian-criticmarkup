@@ -183,7 +183,7 @@ export class AnnotationGutterView extends GutterView {
 		const currentLocation = (element.dom.children[markerIndex] as HTMLElement).offsetTop;
 
 		// EXPL: Determine the offset between the current location and the desired location
-		let offset = desiredLocation - currentLocation;
+		const offset = desiredLocation - currentLocation;
 
 		// EXPL: It is preferred not to make micro-adjustments on the gutter, so a small offset is ignored
 		if (Math.abs(offset) >= 10 && offset) {
@@ -248,6 +248,7 @@ class AnnotationUpdateContext extends UpdateContext {
 		this.previous_element_end = height;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async addElement(view: EditorView, block: BlockInfo, markers: readonly GutterMarker[]) {
 		/**
 		 * Describes the amount of space between the previous gutter element and the y-postion for the one that will be constructed for the current block
@@ -409,7 +410,7 @@ class AnnotationSingleGutterView extends SingleGutterView {
 		this.resize_handle_el.style.display = (this.view.state.field(annotationGutterMarkers).size && !this.folded) ? "" : "none";
 		this.resize_handle_el.addEventListener("mousedown", (e) => {
 			let initialPosition = e.clientX;
-			let isReadableLineWidth = this.view.state.field(editorInfoField).app.vault.getConfig("readableLineLength");
+			const isReadableLineWidth = this.view.state.field(editorInfoField).app.vault.getConfig("readableLineLength");
 			const temporarySheet = this.view.dom.doc.styleSheets[0];
 
 			// EXPL: Debounce to prevent excessive state updates and DOM redraws while dragging the handle
@@ -651,7 +652,7 @@ class AnnotationGutterElement extends GutterElement {
 		block: BlockInfo | null = null,
 	) {
 		this.block = block;
-		if (this.above != above)
+		if (this.above !== above)
 			this.dom.style.marginTop = (this.above = above) ? above + "px" : "";
 		if (!sameMarkers(this.markers, markers))
 			this.setMarkers(view, markers);

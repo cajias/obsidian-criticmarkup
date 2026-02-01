@@ -46,7 +46,7 @@ export const stickyContextMenuPatch = (onSubmenu = false) => {
         }
     });
 
-    let combined_patch = () => {
+    const combined_patch = () => {
         menu_patch();
         menu_item_patch();
     }
@@ -91,6 +91,7 @@ export const syncMarkdownViewCustomStatePatch = (
         // EXPL: Called on every file change, particularly hot path code
         //		 If clear is enabled, the extensions will be reloaded (guaranteed to be synchronous)
         setData: (oldMethod) => {
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             return async function (this: MarkdownView, ...args) {
                 // NOTE: Checking via args[1] (`clear`) will only execute syncState if the file is changed
                 if (args[1]) {

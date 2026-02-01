@@ -39,7 +39,7 @@ declare module "@codemirror/view" {
 }
 
 export function sameMarkers(a: readonly GutterMarker[], b: readonly GutterMarker[]): boolean {
-	if (a.length != b.length) return false;
+	if (a.length !== b.length) return false;
 	for (let i = 0; i < a.length; i++) {
 		// @ts-expect-error (compare does exist on marker)
 		if (!a[i].compare(b[i])) {
@@ -137,11 +137,11 @@ export class GutterElement {
 	}
 
 	update(view: EditorView, height: number, above: number, markers: readonly GutterMarker[]) {
-		if (this.height != height) {
+		if (this.height !== height) {
 			this.height = height;
 			this.dom.style.height = height + "px";
 		}
-		if (this.above != above)
+		if (this.above !== above)
 			this.dom.style.marginTop = (this.above = above) ? above + "px" : "";
 		if (!sameMarkers(this.markers, markers)) this.setMarkers(view, markers);
 	}
@@ -224,7 +224,7 @@ export class UpdateContext {
 		const { gutter } = this;
 		const above = block.top - this.height /** / view.scaleY */;
 		const height = block.height /** / view.scaleY */;
-		if (this.i == gutter.elements.length) {
+		if (this.i === gutter.elements.length) {
 			const newElt = new GutterElement(view, height, above, markers);
 			gutter.elements.push(newElt);
 			gutter.dom.appendChild(newElt.dom);
@@ -236,7 +236,7 @@ export class UpdateContext {
 	}
 
 	line(view: EditorView, line: BlockInfo, extraMarkers: readonly GutterMarker[]) {
-		let localMarkers: GutterMarker[] = [];
+		const localMarkers: GutterMarker[] = [];
 
 		// EXPL: advanceCursor will place all GutterMarkers between the last this.cursor position and line.from into localMarkers
 
@@ -254,7 +254,7 @@ export class UpdateContext {
 		if (forLine) localMarkers.unshift(forLine);
 
 		const gutter = this.gutter;
-		if (localMarkers.length == 0 && !gutter.config.renderEmptyElements) return;
+		if (localMarkers.length === 0 && !gutter.config.renderEmptyElements) return;
 		this.addElement(view, line, localMarkers);
 	}
 
@@ -295,8 +295,8 @@ export class SingleGutterView {
 		for (const prop in config.domEventHandlers) {
 			this.dom.addEventListener(prop, (event: Event) => {
 				let target = event.target as HTMLElement, y;
-				if (target != this.dom && this.dom.contains(target)) {
-					while (target.parentNode != this.dom) target = target.parentNode as HTMLElement;
+				if (target !== this.dom && this.dom.contains(target)) {
+					while (target.parentNode !== this.dom) target = target.parentNode as HTMLElement;
 					const rect = target.getBoundingClientRect();
 					y = (rect.top + rect.bottom) / 2;
 				} else {
@@ -321,7 +321,7 @@ export class SingleGutterView {
 		this.markers = asArray(this.config.markers(update.view));
 		if (this.spacer && this.config.updateSpacer) {
 			const updated = this.config.updateSpacer(this.spacer.markers[0], update);
-			if (updated != this.spacer.markers[0]) this.spacer.update(update.view, 0, 0, [updated]);
+			if (updated !== this.spacer.markers[0]) this.spacer.update(update.view, 0, 0, [updated]);
 		}
 		const vp = update.view.viewport;
 		return !RangeSet.eq(this.markers, prevMarkers, vp.from, vp.to) ||
@@ -405,7 +405,7 @@ export class GutterView {
 			this.syncGutters(vpOverlap < (vpB.to - vpB.from) * 0.8);
 		}
 		if (update.geometryChanged) this.dom.style.minHeight = this.view.contentHeight + "px";
-		if (this.view.state.facet(this.unfixGutters) != !this.fixed) {
+		if (this.view.state.facet(this.unfixGutters) !== !this.fixed) {
 			this.fixed = !this.fixed;
 			this.dom.style.position = this.fixed ? "sticky" : "";
 		}
@@ -436,7 +436,7 @@ export class GutterView {
 			if (Array.isArray(line.type)) {
 				let first = true;
 				for (const b of line.type) {
-					if (b.type == BlockType.Text && first) {
+					if (b.type === BlockType.Text && first) {
 						advanceCursor(lineClasses, classSet, b.from);
 						for (const cx of contexts)
 							cx.line(this.view, b, classSet);
@@ -447,7 +447,7 @@ export class GutterView {
 					}
 				}
 			} // EXPL: If block consists of text
-			else if (line.type == BlockType.Text) {
+			else if (line.type === BlockType.Text) {
 				advanceCursor(lineClasses, classSet, line.from);
 				for (const cx of contexts)
 					cx.line(this.view, line, classSet);
@@ -478,7 +478,7 @@ export class GutterView {
 				update.view.viewport.from,
 				update.view.viewport.to,
 			);
-		if (prev == cur) {
+		if (prev === cur) {
 			// EXPL: Updates all gutters, results in syncGutters if change === True
 			for (const gutter of this.gutters) {
 				if (gutter.update(update))
@@ -520,8 +520,8 @@ export function createGutterViewPlugin<T extends GutterView>(cls: { new(view: Ed
 		provide: plugin =>
 			EditorView.scrollMargins.of(view => {
 				const value = view.plugin(plugin);
-				if (!value || value.gutters.length == 0 || !value.fixed) return null;
-				return view.textDirection == Direction.LTR ?
+				if (!value || value.gutters.length === 0 || !value.fixed) return null;
+				return view.textDirection === Direction.LTR ?
 					{ left: value.dom.offsetWidth /** * view.scaleX*/ } :
 					{ right: value.dom.offsetWidth /** * view.scaleX*/ };
 			}),

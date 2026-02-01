@@ -13,8 +13,6 @@ import {
 	SubstitutionRange,
 	SuggestionType,
 } from "../ranges";
-import {pluginSettingsField} from "../../uix";
-
 export enum MarkAction {
 	REGULAR = "regular",
 	CLEAR = "clear",

@@ -17,6 +17,7 @@ export interface MetadataFields {
 	done?: boolean;
 	style?: string;
 	color?: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[prop: string]: any;
 }
 
@@ -52,7 +53,7 @@ export abstract class CriticMarkupRange {
 						delete this.fields[key as keyof typeof this.fields];
 					}
 				}
-			} catch (e) {
+			} catch {
 				// TODO: Mark as invalid markdown (this can happen when separator @@ exists, but {} is not given
 				this.fields = {};
 			}
@@ -278,11 +279,11 @@ export abstract class CriticMarkupRange {
 	}
 
 	cursor_move_through(cursor: number, right: boolean, movement: RANGE_CURSOR_MOVEMENT_OPTION) {
-		if (movement == RANGE_CURSOR_MOVEMENT_OPTION.UNCHANGED || !this.cursor_inside(cursor)) { /* No action */ }
-		else if (movement == RANGE_CURSOR_MOVEMENT_OPTION.IGNORE_COMPLETELY)
+		if (movement === RANGE_CURSOR_MOVEMENT_OPTION.UNCHANGED || !this.cursor_inside(cursor)) { /* No action */ }
+		else if (movement === RANGE_CURSOR_MOVEMENT_OPTION.IGNORE_COMPLETELY)
 			cursor = right ? this.to : this.from;
 		else
-			cursor = this.cursor_pass_syntax(cursor, right, movement == RANGE_CURSOR_MOVEMENT_OPTION.IGNORE_METADATA);
+			cursor = this.cursor_pass_syntax(cursor, right, movement === RANGE_CURSOR_MOVEMENT_OPTION.IGNORE_METADATA);
 		return cursor;
 	}
 

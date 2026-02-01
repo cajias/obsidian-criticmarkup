@@ -16,6 +16,7 @@ export class DaterangeModal extends Modal {
 		this.contentEl.parentElement!.addClass("cmtr-daterange-picker-modal");
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async onOpen() {
 		this.view = mount(DateRangeModalView, {
 			target: this.contentEl,
@@ -33,7 +34,7 @@ export class DaterangeModal extends Modal {
 
 	onClose() {
 		if (this.view) {
-			unmount(this.view);
+			void unmount(this.view);
 		}
 	}
 }

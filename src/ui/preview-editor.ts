@@ -157,7 +157,7 @@ export class PreviewEditor extends Component {
             this.container.addClass(...([] as string[]).concat(this.options.preview_cls));
         }
 
-        MarkdownRenderer.render(this.app, this.options.value, this.container, "", this);
+        void MarkdownRenderer.render(this.app, this.options.value, this.container, "", this);
         const click_listener = () => {
             this.clickContainer.removeEventListener(this.options.focus_mode, click_listener);
             setImmediate(() => { this.switchMode() });
