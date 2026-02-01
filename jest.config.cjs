@@ -1,12 +1,13 @@
 module.exports = {
 	testEnvironment: 'jsdom',
 	testMatch: ["**/tests/**/*.test.ts"],
+	// cursor_movement.test.ts depends on unmocked Obsidian `app` global
+	testPathIgnorePatterns: ["/node_modules/", "tests/cursor_movement.test.ts"],
 
 	collectCoverage: false,
 
 	transform: {
-		'^.+\\.ts$': 'ts-jest',
-		"^.+\\.(js|jsx)$": "esbuild-jest"
+		"^.+\\.(ts|js|jsx)$": "esbuild-jest"
 	},
 
 
