@@ -3,8 +3,15 @@ import { CriticMarkupRange } from "../base_range";
 import { CM_All_Brackets, SuggestionType } from "../definitions";
 
 export class SubstitutionRange extends CriticMarkupRange {
+	private _invalid = false;
+
 	constructor(from: number, public middle: number, to: number, text: string, metadata?: number) {
 		super(from, to, SuggestionType.SUBSTITUTION, "Substitution", text, metadata);
+		const cm = this.middle - this.range_front;
+		if (cm < 3 || cm + 2 > this.text.length - 3) {
+			console.warn(`Invalid substitution range: middle position ${middle} is out of bounds for range [${from}, ${to}]`);
+			this._invalid = true;
+		}
 	}
 
 	get length() {
@@ -24,10 +31,12 @@ export class SubstitutionRange extends CriticMarkupRange {
 	}
 
 	unwrap() {
+		if (this._invalid) return "";
 		return this.text.slice(3, this.char_middle) + this.text.slice(this.char_middle + 2, -3);
 	}
 
 	unwrap_parts() {
+		if (this._invalid) return ["", ""];
 		return [
 			this.text.slice(3, this.char_middle),
 			this.text.slice(this.char_middle + 2, -3),
