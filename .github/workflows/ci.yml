@@ -25,8 +25,9 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          key: ${{ runner.os }}-bun-lint-${{ hashFiles('bun.lock') }}
           restore-keys: |
+            ${{ runner.os }}-bun-lint-
             ${{ runner.os }}-bun-
       - name: Install dependencies
         run: bun install --frozen-lockfile || bun install
@@ -50,8 +51,9 @@ jobs:
             ~/.bun/install/cache
             node_modules
             src/editor/base/parser/node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          key: ${{ runner.os }}-bun-full-${{ hashFiles('bun.lock', 'src/editor/base/parser/bun.lock') }}
           restore-keys: |
+            ${{ runner.os }}-bun-full-
             ${{ runner.os }}-bun-
       - name: Install dependencies
         run: bun install --frozen-lockfile || bun install
@@ -80,8 +82,9 @@ jobs:
             ~/.bun/install/cache
             node_modules
             src/editor/base/parser/node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          key: ${{ runner.os }}-bun-full-${{ hashFiles('bun.lock', 'src/editor/base/parser/bun.lock') }}
           restore-keys: |
+            ${{ runner.os }}-bun-full-
             ${{ runner.os }}-bun-
       - name: Install dependencies
         run: bun install --frozen-lockfile || bun install
@@ -111,8 +114,9 @@ jobs:
             ~/.bun/install/cache
             node_modules
             src/editor/base/parser/node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          key: ${{ runner.os }}-bun-full-${{ hashFiles('bun.lock', 'src/editor/base/parser/bun.lock') }}
           restore-keys: |
+            ${{ runner.os }}-bun-full-
             ${{ runner.os }}-bun-
       - name: Install dependencies
         run: bun install --frozen-lockfile || bun install
