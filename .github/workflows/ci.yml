@@ -40,9 +40,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    # Pre-existing test (cursor_movement.test.ts) depends on unmocked Obsidian `app` global.
-    # Allow test failures until that mock is added. Tracked separately.
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
