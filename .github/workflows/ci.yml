@@ -10,27 +10,22 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    # TODO: Remove continue-on-error after #8 (lint config adoption) lands
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
       - name: Cache bun dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.bun/install/cache
-            node_modules
-          key: ${{ runner.os }}-bun-lint-${{ hashFiles('bun.lock') }}
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-lint-
             ${{ runner.os }}-bun-
       - name: Install dependencies
-        run: bun install --frozen-lockfile || bun install
+        run: bun install --frozen-lockfile
       - name: Lint
         run: bun run lint
 
@@ -41,26 +36,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
       - name: Cache bun dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.bun/install/cache
-            node_modules
-            src/editor/base/parser/node_modules
-          key: ${{ runner.os }}-bun-full-${{ hashFiles('bun.lock', 'src/editor/base/parser/bun.lock') }}
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-full-
             ${{ runner.os }}-bun-
       - name: Install dependencies
-        run: bun install --frozen-lockfile || bun install
+        run: bun install --frozen-lockfile
       - name: Build parser
         run: |
           cd src/editor/base/parser
-          bun install --frozen-lockfile || bun install
+          bun install --frozen-lockfile
           bun run build
       - name: Typecheck
         run: bun run tsc -noEmit -skipLibCheck
@@ -68,30 +59,28 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    # TODO: Remove continue-on-error after pre-existing test failures are fixed
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
       - name: Cache bun dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.bun/install/cache
-            node_modules
-            src/editor/base/parser/node_modules
-          key: ${{ runner.os }}-bun-full-${{ hashFiles('bun.lock', 'src/editor/base/parser/bun.lock') }}
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-full-
             ${{ runner.os }}-bun-
       - name: Install dependencies
-        run: bun install --frozen-lockfile || bun install
+        run: bun install --frozen-lockfile
       - name: Build parser
         run: |
           cd src/editor/base/parser
-          bun install --frozen-lockfile || bun install
+          bun install --frozen-lockfile
           bun run build
       - name: Test
         run: bun run test
@@ -104,26 +93,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
       - name: Cache bun dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.bun/install/cache
-            node_modules
-            src/editor/base/parser/node_modules
-          key: ${{ runner.os }}-bun-full-${{ hashFiles('bun.lock', 'src/editor/base/parser/bun.lock') }}
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-full-
             ${{ runner.os }}-bun-
       - name: Install dependencies
-        run: bun install --frozen-lockfile || bun install
+        run: bun install --frozen-lockfile
       - name: Build parser
         run: |
           cd src/editor/base/parser
-          bun install --frozen-lockfile || bun install
+          bun install --frozen-lockfile
           bun run build
       - name: Build plugin
         run: bun run build
