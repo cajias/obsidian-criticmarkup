@@ -36,9 +36,9 @@ export async function applyToFile(
 	ranges.sort((a, b) => a.from - b.from);
 	const text = await app.vault.read(file);
 
-	// When remove_attached_comments is true, we need to extend the replacement range
-	// to include attached comments (full_range_back). We do this by adding the comment
-	// ranges to the ranges array and replacing them with empty strings.
+	// When remove_attached_comments is true, we need to also remove the attached comment
+	// ranges. We do this by adding the comment ranges to the rangesToApply array so they
+	// will be replaced with empty strings along with the suggestion.
 	const rangesToApply: CriticMarkupRange[] = [];
 	if (remove_attached_comments) {
 		for (const range of ranges) {
