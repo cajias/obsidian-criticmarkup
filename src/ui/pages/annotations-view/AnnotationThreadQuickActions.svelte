@@ -45,12 +45,12 @@
 			<Button
                 icon="check"
                 tooltip={"Accept change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, plugin.settings.remove_comments_on_accept), true)}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, plugin.settings.remove_comments_on_accept), false)}
 			/>
 			<Button
                 icon="cross"
                 tooltip={"Reject change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.reject(), app, file, ranges, plugin.settings.remove_comments_on_accept), true)}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.reject(), app, file, ranges, plugin.settings.remove_comments_on_accept), false)}
 			/>
 		{/if}
 
