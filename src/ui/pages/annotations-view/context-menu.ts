@@ -28,7 +28,7 @@ export function onContextMenu(
                 .setIcon("check")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => range.accept()), plugin.settings.remove_comments_on_accept));
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, plugin.settings.remove_comments_on_accept), true));
         });
         menu.addItem((item) => {
             item
@@ -36,7 +36,7 @@ export function onContextMenu(
                 .setIcon("cross")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => range.reject()), plugin.settings.remove_comments_on_accept))
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => range.reject(), app, file, ranges, plugin.settings.remove_comments_on_accept), true))
         });
     } else if (used_types.size === 1 && used_types.has(SuggestionType.COMMENT)) {
         menu.addItem((item) => {
@@ -45,7 +45,7 @@ export function onContextMenu(
                 .setIcon("message-square-off")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => "")));
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => "", app, file, ranges, false), true));
         });
     } else {
         menu.addItem((item) => {
@@ -54,7 +54,7 @@ export function onContextMenu(
                 .setIcon("trash")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => "")));
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => "", app, file, ranges, false), true));
         });
     }
 
@@ -114,7 +114,7 @@ export function onContextMenu(
                 item.setTitle("Remove comment")
                     .setIcon("cross")
                     .setSection("comment-handling")
-                    .onClick(async () => applyRangeEditsToVault(plugin, ranges, applyToFile.bind(null, (range, _) => ""), false));
+                    .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => "", app, file, ranges, false), false));
             });
         }
     }

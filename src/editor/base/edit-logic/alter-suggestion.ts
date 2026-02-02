@@ -31,11 +31,35 @@ export async function applyToFile(
 	app: App,
 	file: TFile,
 	ranges: CriticMarkupRange[],
+	remove_attached_comments: boolean = true,
 ): Promise<void> {
 	ranges.sort((a, b) => a.from - b.from);
 	const text = await app.vault.read(file);
 
-	const output = applyToText(text, applyFn, ranges);
+	// When remove_attached_comments is true, we need to extend the replacement range
+	// to include attached comments (full_range_back). We do this by adding the comment
+	// ranges to the ranges array and replacing them with empty strings.
+	const rangesToApply: CriticMarkupRange[] = [];
+	if (remove_attached_comments) {
+		for (const range of ranges) {
+			rangesToApply.push(range);
+			// Add attached comment ranges to be removed
+			if (range.replies.length > 0) {
+				rangesToApply.push(...range.replies);
+			}
+		}
+		rangesToApply.sort((a, b) => a.from - b.from);
+	} else {
+		rangesToApply.push(...ranges);
+	}
+
+	const output = applyToText(text, (range, text) => {
+		// For comment ranges that are being removed, return empty string
+		if (remove_attached_comments && range.type === SuggestionType.COMMENT) {
+			return "";
+		}
+		return applyFn(range, text);
+	}, rangesToApply);
 
 	await app.vault.modify(file, output);
 }
