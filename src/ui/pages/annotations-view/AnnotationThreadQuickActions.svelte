@@ -31,13 +31,13 @@
 				<Button
                     icon="message-square-off"
                     tooltip={"Delete comment thread"}
-                    onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()))}
+                    onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, false), true)}
 				/>
 			{:else}
 				<Button
                     icon="cross"
                     tooltip={"Delete comment"}
-                    onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()))}
+                    onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, false), true)}
 				/>
 			{/if}
 
@@ -45,12 +45,12 @@
 			<Button
                 icon="check"
                 tooltip={"Accept change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()), plugin.settings.remove_comments_on_accept)}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, plugin.settings.remove_comments_on_accept), true)}
 			/>
 			<Button
                 icon="cross"
                 tooltip={"Reject change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.reject()), plugin.settings.remove_comments_on_accept)}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.reject(), app, file, ranges, plugin.settings.remove_comments_on_accept), true)}
 			/>
 		{/if}
 
