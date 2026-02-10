@@ -28,12 +28,13 @@ jobs:
           cd ../../../..
           bun i --force
           bun run build
+          TAG_NAME=$(git tag --sort version:refname | tail -n 1)
           mkdir ${{ env.PLUGIN_NAME }}
           cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
-          zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
+          zip -r ${{ env.PLUGIN_NAME }}-${TAG_NAME}.zip ${{ env.PLUGIN_NAME }}
           ls
           bunx rexreplace "^.*?#(#+\s\[.*?\n.*?)(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > release_notes.md
-          echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
+          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
@@ -42,4 +43,4 @@ jobs:
             main.js
             manifest.json
             styles.css
-            ${{ env.PLUGIN_NAME }}.zip
+            ${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip
