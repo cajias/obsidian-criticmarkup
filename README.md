@@ -6,6 +6,18 @@ collaborative editing and reviewing your notes. Includes a suggestion mode for k
 This plugin was built upon the excellent work and advice of @kometenstaub, the original repositories can be found here: [CriticMarkup plugin](https://github.com/kometenstaub/obsidian-criticmarkup)
 and [CriticMarkup parser](https://github.com/kometenstaub/lang-criticmarkup).
 
+## Installation
+
+This plugin is currently available for beta testing. To install it using [BRAT](https://github.com/TfTHacker/obsidian42-brat):
+
+1. Install the BRAT plugin from the Obsidian Community Plugins directory
+2. Open BRAT settings
+3. Click "Add Beta plugin"
+4. Enter this repository URL: `cajias/obsidian-criticmarkup`
+5. Click "Add Plugin"
+
+BRAT will automatically download and install the latest release of the plugin.
+
 Roadmap for full product can be found below. No timeline will be given for when (and in which order)
 these features will be implemented. If features prove to be completely infeasible to implement, they will be removed from the roadmap.
 
