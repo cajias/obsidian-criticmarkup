@@ -31,11 +31,13 @@ function makeComment(from: number, to: number, text: string) {
 	return new CommentRange(from, to, text);
 }
 
+const REQUIRED_CHANGE_SPEC_PROPS = ["from", "to", "insert"] as const;
+
 function getChangeSpec(change: ChangeSpec) {
 	if (
 		typeof change !== "object" ||
 		change === null ||
-		!["from", "to", "insert"].every((prop) => prop in change)
+		!REQUIRED_CHANGE_SPEC_PROPS.every((prop) => prop in change)
 	) {
 		throw new Error("Expected a simple ChangeSpec object");
 	}
