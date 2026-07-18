@@ -115,6 +115,17 @@ export const moment = {
 	},
 };
 
+// Minimal Component mock so classes that extend Component (e.g. AnnotationNode) can load in tests
+export class Component {
+	onload() {}
+	onunload() {}
+	load() {}
+	unload() {}
+	register(_cb: () => void) {}
+	addChild<T extends Component>(_child: T): T { return _child; }
+	removeChild<T extends Component>(_child: T): T { return _child; }
+}
+
 // Mock StateField for editorEditorField
 export const editorEditorField = Symbol('editorEditorField');
 

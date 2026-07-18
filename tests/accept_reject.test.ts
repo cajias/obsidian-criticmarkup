@@ -8,7 +8,7 @@ import type { CriticMarkupRange } from "../src/editor/base/ranges/base_range";
 import { type ChangeSpec, EditorState } from "@codemirror/state";
 import { rangeParser, acceptSuggestions, rejectSuggestions } from "../src/editor/base";
 import { DEFAULT_SETTINGS } from "../src/constants";
-import { suggestionMode } from "../src/editor/uix/extensions";
+import { providePluginSettingsExtension } from "../src/editor/uix/extensions/plugin-settings";
 
 // Helper: create ranges with correct from/to/text matching the markup position in a string
 function makeAddition(from: number, to: number, text: string, metadata?: number) {
@@ -447,7 +447,7 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		const text = "{++text++}{>>comment<<}";
 		const state = EditorState.create({
 			doc: text,
-			extensions: [rangeParser, suggestionMode(DEFAULT_SETTINGS)],
+			extensions: [rangeParser, providePluginSettingsExtension({ settings: DEFAULT_SETTINGS } as any)],
 		});
 		
 		const changes = acceptSuggestions(state, undefined, undefined, false);
@@ -463,7 +463,7 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		const text = "{++text++}{>>comment<<}";
 		const state = EditorState.create({
 			doc: text,
-			extensions: [rangeParser, suggestionMode(DEFAULT_SETTINGS)],
+			extensions: [rangeParser, providePluginSettingsExtension({ settings: DEFAULT_SETTINGS } as any)],
 		});
 		
 		const changes = acceptSuggestions(state, undefined, undefined, true);
@@ -478,7 +478,7 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		const text = "{--old--}{>>why removed<<}";
 		const state = EditorState.create({
 			doc: text,
-			extensions: [rangeParser, suggestionMode(DEFAULT_SETTINGS)],
+			extensions: [rangeParser, providePluginSettingsExtension({ settings: DEFAULT_SETTINGS } as any)],
 		});
 		
 		const changes = rejectSuggestions(state, undefined, undefined, false);
@@ -493,7 +493,7 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		const text = "{--old--}{>>why removed<<}";
 		const state = EditorState.create({
 			doc: text,
-			extensions: [rangeParser, suggestionMode(DEFAULT_SETTINGS)],
+			extensions: [rangeParser, providePluginSettingsExtension({ settings: DEFAULT_SETTINGS } as any)],
 		});
 		
 		const changes = rejectSuggestions(state, undefined, undefined, true);
@@ -508,7 +508,7 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		const text = "before {~~old~>new~~}{>>review note<<} after";
 		const state = EditorState.create({
 			doc: text,
-			extensions: [rangeParser, suggestionMode(DEFAULT_SETTINGS)],
+			extensions: [rangeParser, providePluginSettingsExtension({ settings: DEFAULT_SETTINGS } as any)],
 		});
 		
 		const changes = acceptSuggestions(state, undefined, undefined, false);
@@ -523,7 +523,7 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		const text = "{++a++}{>>c1<<}{--b--}{>>c2<<}";
 		const state = EditorState.create({
 			doc: text,
-			extensions: [rangeParser, suggestionMode(DEFAULT_SETTINGS)],
+			extensions: [rangeParser, providePluginSettingsExtension({ settings: DEFAULT_SETTINGS } as any)],
 		});
 		
 		const changes = acceptSuggestions(state, undefined, undefined, false);
