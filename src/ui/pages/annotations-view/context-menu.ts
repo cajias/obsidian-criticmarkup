@@ -28,7 +28,7 @@ export function onContextMenu(
                 .setIcon("check")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, plugin.settings.remove_comments_on_accept), false));
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, plugin.settings.remove_comments_on_accept_reject), false));
         });
         menu.addItem((item) => {
             item
@@ -36,7 +36,7 @@ export function onContextMenu(
                 .setIcon("cross")
                 .setSection("close-annotation")
                 .setWarning(use_warning)
-                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => range.reject(), app, file, ranges, plugin.settings.remove_comments_on_accept), false))
+                .onClick(async () => applyRangeEditsToVault(plugin, ranges, (app, file, ranges) => applyToFile((range, _) => range.reject(), app, file, ranges, plugin.settings.remove_comments_on_accept_reject), false))
         });
     } else if (used_types.size === 1 && used_types.has(SuggestionType.COMMENT)) {
         menu.addItem((item) => {

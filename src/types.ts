@@ -270,7 +270,7 @@ export interface PluginSettings {
 	/**
 	 * Whether to remove attached comment threads when accepting/rejecting suggestions
 	 */
-	remove_comments_on_accept: boolean;
+	remove_comments_on_accept_reject: boolean;
 
 	/**
 	 * Cursor movement options for ranges when in suggestion mode

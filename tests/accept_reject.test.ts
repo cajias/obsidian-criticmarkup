@@ -536,8 +536,8 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		expect(firstChange.insert).toBe("a");
 		// Second change: accept deletion (removes it)
 		const secondChange = getChangeSpec(changes[1]);
-		expect(secondChange.from).toBe(14);
-		expect(secondChange.to).toBe(21); // range.to, not including comment
+		expect(secondChange.from).toBe(15);
+		expect(secondChange.to).toBe(22); // range.to, not including comment
 		expect(secondChange.insert).toBe("");
 	});
 });

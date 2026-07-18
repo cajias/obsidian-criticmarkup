@@ -18,14 +18,14 @@ export const diffGutter = /*(plugin: CommentatorPlugin) => */ [
 					item.setTitle("Accept changes")
 						.setIcon("check")
 						.onClick(() => {
-							view.dispatch({ changes: acceptSuggestions(view.state, line.from, line.to, view.state.field(pluginSettingsField).remove_comments_on_accept) });
+							view.dispatch({ changes: acceptSuggestions(view.state, line.from, line.to, view.state.field(pluginSettingsField).remove_comments_on_accept_reject) });
 						});
 				});
 				menu.addItem(item => {
 					item.setTitle("Reject changes")
 						.setIcon("cross")
 						.onClick(() => {
-							view.dispatch({ changes: rejectSuggestions(view.state, line.from, line.to, view.state.field(pluginSettingsField).remove_comments_on_accept) });
+							view.dispatch({ changes: rejectSuggestions(view.state, line.from, line.to, view.state.field(pluginSettingsField).remove_comments_on_accept_reject) });
 						});
 				});
 

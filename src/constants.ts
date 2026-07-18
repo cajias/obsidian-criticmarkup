@@ -88,7 +88,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 
 	author: "",
 
-	remove_comments_on_accept: true,
+	remove_comments_on_accept_reject: true,
 
 	suggestion_mode_operations: {
 		cursor_movement: {

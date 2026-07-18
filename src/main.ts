@@ -94,6 +94,16 @@ export default class CommentatorPlugin extends Plugin {
 	//		 to annotation gutter(s), even if the codemirror instance has not been set up yet
 	annotation_gutter_config?: { width: number; foldState: boolean } = undefined;
 
+	normalizeSettings(new_settings: PluginSettings | null) {
+		const settings = Object.assign({}, new_settings ?? {}) as Partial<PluginSettings> & { remove_comments_on_accept?: boolean };
+		const has_legacy_remove_comments_setting = "remove_comments_on_accept" in settings;
+		if (has_legacy_remove_comments_setting && settings.remove_comments_on_accept_reject === undefined) {
+			settings.remove_comments_on_accept_reject = settings.remove_comments_on_accept;
+		}
+		delete settings.remove_comments_on_accept;
+		return { settings, has_legacy_remove_comments_setting };
+	}
+
 	loadEditorExtensions() {
 		this.editorExtensions.length = 0;
 
@@ -258,20 +268,21 @@ export default class CommentatorPlugin extends Plugin {
 	}
 
 	async migrateSettings(new_settings: PluginSettings) {
+		const { settings: normalized_settings, has_legacy_remove_comments_setting } = this.normalizeSettings(new_settings);
 		const original_settings = this.settings;
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, new_settings);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, normalized_settings);
 		this.previous_settings = Object.assign({}, original_settings, this.settings);
 
 		// EXPL: Do not migrate new installs, immediately save settings
 		if (new_settings === null)
 			await this.setSettings();
 		else {
-			const old_version = new_settings?.version;
+			const old_version = normalized_settings?.version;
 			// EXPL: Migration code for upgrading to a new version
 			try {
-				if (old_version !== DEFAULT_SETTINGS.version) {
+				if (old_version !== DEFAULT_SETTINGS.version || has_legacy_remove_comments_setting) {
 					// EXPL: Migrate settings from 0.1.x, where the settings did not contain a version field
-					if (!old_version) {
+					if (old_version !== DEFAULT_SETTINGS.version && !old_version) {
 						this.app.workspace.onLayoutReady(async () => {
 							new Notice("Commentator: rebuilding database for new version", 5000);
 							new Notice(
@@ -282,9 +293,9 @@ export default class CommentatorPlugin extends Plugin {
 					}
 
 					// EXPL: Migrate settings from 0.2.x to 0.2.3, suggestion and comment gutter settings were renamed
-					if (old_version.localeCompare("0.2.3", undefined, {numeric: true}) < 0) {
+					if (old_version && old_version.localeCompare("0.2.3", undefined, {numeric: true}) < 0) {
 						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					if ((new_settings as unknown as any).suggestion_gutter_hide_empty) {
+						if ((normalized_settings as unknown as any).suggestion_gutter_hide_empty) {
 							const settings_migrations = [
 								["suggestion_gutter", "diff_gutter"],
 								["suggestion_gutter_hide_empty", "diff_gutter_hide_empty"],
@@ -339,7 +350,7 @@ export default class CommentatorPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, this.normalizeSettings(await this.loadData()).settings);
 	}
 
 	async setSettings() {

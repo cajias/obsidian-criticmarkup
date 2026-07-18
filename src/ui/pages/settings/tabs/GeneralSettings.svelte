@@ -120,9 +120,9 @@
 >
   {#snippet control()}
     <Toggle
-      value={plugin.settings.remove_comments_on_accept}
+      value={plugin.settings.remove_comments_on_accept_reject}
       onChange={(value) => {
-        plugin.settings.remove_comments_on_accept = value;
+        plugin.settings.remove_comments_on_accept_reject = value;
         plugin.saveSettings();
       }}
     />

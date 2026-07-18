@@ -30,7 +30,7 @@ export const cmenuGlobalCommands: (plugin: CommentatorPlugin) => EventRef = (plu
 					.onClick(() => {
 						const selections: SelectionRange[] = editor.cm.state.selection.ranges;
 						const changes = selections.map(selection =>
-							acceptSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept)
+							acceptSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept_reject)
 						);
 						editor.cm.dispatch(editor.cm.state.update({
 							changes,
@@ -46,7 +46,7 @@ export const cmenuGlobalCommands: (plugin: CommentatorPlugin) => EventRef = (plu
 						const selections = editor.cm.state.selection.ranges;
 						// @ts-expect-error Somehow selections is any (while ranges is defined)
 						const changes = selections.map(selection =>
-							rejectSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept)
+							rejectSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept_reject)
 						);
 						editor.cm.dispatch(editor.cm.state.update({
 							changes,

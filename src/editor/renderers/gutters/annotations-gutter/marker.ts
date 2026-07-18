@@ -177,7 +177,7 @@ class AnnotationNode extends Component {
 					.setIcon("check")
 					.setSection("close-annotation")
 					.onClick(() => {
-						this.marker.view.dispatch({ changes: acceptSuggestions(this.marker.view.state, this.range.from, this.range.to, this.marker.view.state.field(pluginSettingsField).remove_comments_on_accept) });
+						this.marker.view.dispatch({ changes: acceptSuggestions(this.marker.view.state, this.range.from, this.range.to, this.marker.view.state.field(pluginSettingsField).remove_comments_on_accept_reject) });
 					});
 			});
 			menu.addItem((item) => {
@@ -185,7 +185,7 @@ class AnnotationNode extends Component {
 					.setIcon("cross")
 					.setSection("close-annotation")
 					.onClick(() => {
-						this.marker.view.dispatch({ changes: rejectSuggestions(this.marker.view.state, this.range.from, this.range.to, this.marker.view.state.field(pluginSettingsField).remove_comments_on_accept) });
+						this.marker.view.dispatch({ changes: rejectSuggestions(this.marker.view.state, this.range.from, this.range.to, this.marker.view.state.field(pluginSettingsField).remove_comments_on_accept_reject) });
 					});
 			});
 		}

@@ -68,7 +68,7 @@ export const editor_commands: (plugin: CommentatorPlugin) => ECommand[] = (plugi
 		regular_callback: (editor: Editor, _) => {
 			// TODO: Add warning is #ranges > 100 ('Are you sure you want to accept all suggestions?')
 			editor.cm.dispatch(editor.cm.state.update({
-				changes: acceptSuggestions(editor.cm.state, undefined, undefined, plugin.settings.remove_comments_on_accept),
+				changes: acceptSuggestions(editor.cm.state, undefined, undefined, plugin.settings.remove_comments_on_accept_reject),
 			}));
 		},
 	},
@@ -79,7 +79,7 @@ export const editor_commands: (plugin: CommentatorPlugin) => ECommand[] = (plugi
 		editor_context: true,
 		regular_callback: (editor: Editor, _) => {
 			editor.cm.dispatch(editor.cm.state.update({
-				changes: rejectSuggestions(editor.cm.state, undefined, undefined, plugin.settings.remove_comments_on_accept),
+				changes: rejectSuggestions(editor.cm.state, undefined, undefined, plugin.settings.remove_comments_on_accept_reject),
 			}));
 		},
 	},
@@ -95,7 +95,7 @@ export const editor_commands: (plugin: CommentatorPlugin) => ECommand[] = (plugi
 			const selections = editor.cm.state.selection.ranges;
 			// @ts-expect-error Somehow selections is any (while ranges is defined)
 			const changes = selections.map(selection =>
-				acceptSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept)
+				acceptSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept_reject)
 			);
 			editor.cm.dispatch(editor.cm.state.update({
 				changes,
@@ -113,7 +113,7 @@ export const editor_commands: (plugin: CommentatorPlugin) => ECommand[] = (plugi
 				return contains_range;
 			const selections = editor.cm.state.selection.ranges;
 			const changes = selections.map((selection: SelectionRange) =>
-				rejectSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept)
+				rejectSuggestions(editor.cm.state, selection.from, selection.to, plugin.settings.remove_comments_on_accept_reject)
 			);
 			editor.cm.dispatch(editor.cm.state.update({
 				changes,
