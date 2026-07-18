@@ -5,7 +5,7 @@ import { HighlightRange } from "../src/editor/base/ranges/types/highlight_range"
 import { CommentRange } from "../src/editor/base/ranges/types/comment_range";
 import { applyToText } from "../src/editor/base/edit-util/range-operations";
 import type { CriticMarkupRange } from "../src/editor/base/ranges/base_range";
-import { EditorState } from "@codemirror/state";
+import { type ChangeSpec, EditorState } from "@codemirror/state";
 import { rangeParser, acceptSuggestions, rejectSuggestions } from "../src/editor/base";
 import { DEFAULT_SETTINGS } from "../src/constants";
 import { suggestionMode } from "../src/editor/uix/extensions";
@@ -29,6 +29,17 @@ function makeHighlight(from: number, to: number, text: string) {
 
 function makeComment(from: number, to: number, text: string) {
 	return new CommentRange(from, to, text);
+}
+
+function getChangeSpec(change: ChangeSpec) {
+	if (
+		typeof change !== "object" || !change ||
+		!("from" in change) || !("to" in change) || !("insert" in change)
+	) {
+		throw new Error("Expected a simple ChangeSpec object");
+	}
+
+	return change as { from: number; to: number; insert: string };
 }
 
 // ─── Individual Range Types ───
@@ -438,9 +449,10 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		
 		const changes = acceptSuggestions(state, undefined, undefined, false);
 		expect(changes.length).toBe(1);
-		expect(changes[0].from).toBe(0);
-		expect(changes[0].to).toBe(10); // Should be range.to, not range.full_range_back
-		expect(changes[0].insert).toBe("text");
+		const change = getChangeSpec(changes[0]);
+		expect(change.from).toBe(0);
+		expect(change.to).toBe(10); // Should be range.to, not range.full_range_back
+		expect(change.insert).toBe("text");
 	});
 
 	test("acceptSuggestions with remove_attached_comments=true removes attached comment", () => {
@@ -453,9 +465,10 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		
 		const changes = acceptSuggestions(state, undefined, undefined, true);
 		expect(changes.length).toBe(1);
-		expect(changes[0].from).toBe(0);
-		expect(changes[0].to).toBe(23); // Should be range.full_range_back, including the comment
-		expect(changes[0].insert).toBe("text");
+		const change = getChangeSpec(changes[0]);
+		expect(change.from).toBe(0);
+		expect(change.to).toBe(23); // Should be range.full_range_back, including the comment
+		expect(change.insert).toBe("text");
 	});
 
 	test("rejectSuggestions with remove_attached_comments=false preserves attached comment", () => {
@@ -467,9 +480,10 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		
 		const changes = rejectSuggestions(state, undefined, undefined, false);
 		expect(changes.length).toBe(1);
-		expect(changes[0].from).toBe(0);
-		expect(changes[0].to).toBe(9); // Should be range.to, not range.full_range_back
-		expect(changes[0].insert).toBe("old");
+		const change = getChangeSpec(changes[0]);
+		expect(change.from).toBe(0);
+		expect(change.to).toBe(9); // Should be range.to, not range.full_range_back
+		expect(change.insert).toBe("old");
 	});
 
 	test("rejectSuggestions with remove_attached_comments=true removes attached comment", () => {
@@ -481,9 +495,10 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		
 		const changes = rejectSuggestions(state, undefined, undefined, true);
 		expect(changes.length).toBe(1);
-		expect(changes[0].from).toBe(0);
-		expect(changes[0].to).toBe(26); // Should be range.full_range_back, including the comment
-		expect(changes[0].insert).toBe("old");
+		const change = getChangeSpec(changes[0]);
+		expect(change.from).toBe(0);
+		expect(change.to).toBe(26); // Should be range.full_range_back, including the comment
+		expect(change.insert).toBe("old");
 	});
 
 	test("acceptSuggestions with substitution preserves attached comment when remove_attached_comments=false", () => {
@@ -495,9 +510,10 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		
 		const changes = acceptSuggestions(state, undefined, undefined, false);
 		expect(changes.length).toBe(1);
-		expect(changes[0].from).toBe(7);
-		expect(changes[0].to).toBe(21); // Should be range.to, not range.full_range_back
-		expect(changes[0].insert).toBe("new");
+		const change = getChangeSpec(changes[0]);
+		expect(change.from).toBe(7);
+		expect(change.to).toBe(21); // Should be range.to, not range.full_range_back
+		expect(change.insert).toBe("new");
 	});
 
 	test("multiple suggestions preserve comments when remove_attached_comments=false", () => {
@@ -511,13 +527,15 @@ describe("Accept/reject with remove_attached_comments parameter", () => {
 		// Should have 2 changes, one for each suggestion
 		expect(changes.length).toBe(2);
 		// First change: accept addition
-		expect(changes[0].from).toBe(0);
-		expect(changes[0].to).toBe(7); // range.to, not including comment
-		expect(changes[0].insert).toBe("a");
+		const firstChange = getChangeSpec(changes[0]);
+		expect(firstChange.from).toBe(0);
+		expect(firstChange.to).toBe(7); // range.to, not including comment
+		expect(firstChange.insert).toBe("a");
 		// Second change: accept deletion (removes it)
-		expect(changes[1].from).toBe(14);
-		expect(changes[1].to).toBe(21); // range.to, not including comment
-		expect(changes[1].insert).toBe("");
+		const secondChange = getChangeSpec(changes[1]);
+		expect(secondChange.from).toBe(14);
+		expect(secondChange.to).toBe(21); // range.to, not including comment
+		expect(secondChange.insert).toBe("");
 	});
 });
 
