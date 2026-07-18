@@ -282,7 +282,7 @@ export default class CommentatorPlugin extends Plugin {
 			try {
 				if (old_version !== DEFAULT_SETTINGS.version || has_legacy_remove_comments_setting) {
 					// EXPL: Migrate settings from 0.1.x, where the settings did not contain a version field
-					if (old_version !== DEFAULT_SETTINGS.version && !old_version) {
+					if (!old_version) {
 						this.app.workspace.onLayoutReady(async () => {
 							new Notice("Commentator: rebuilding database for new version", 5000);
 							new Notice(
