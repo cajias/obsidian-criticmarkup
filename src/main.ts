@@ -47,6 +47,8 @@ import {
 import { debugRangeset, iterateAllCMInstances, sendAnnotationToAllCMInstances, updateCompartment} from "./util/cm-util";
 import { objectDifference } from "./util/util";
 
+type LegacyPluginSettings = Partial<PluginSettings> & { remove_comments_on_accept?: boolean };
+
 export default class CommentatorPlugin extends Plugin {
 	editorExtensions: Extension[] = [];
 
@@ -94,8 +96,12 @@ export default class CommentatorPlugin extends Plugin {
 	//		 to annotation gutter(s), even if the codemirror instance has not been set up yet
 	annotation_gutter_config?: { width: number; foldState: boolean } = undefined;
 
+	/**
+	 * Normalizes persisted settings and migrates the legacy remove_comments_on_accept key
+	 * to remove_comments_on_accept_reject while preserving the stored value.
+	 */
 	normalizeSettings(new_settings: PluginSettings | null) {
-		const settings = Object.assign({}, new_settings ?? {}) as Partial<PluginSettings> & { remove_comments_on_accept?: boolean };
+		const settings = Object.assign({}, new_settings ?? {}) as LegacyPluginSettings;
 		const has_legacy_remove_comments_setting = "remove_comments_on_accept" in settings;
 		if (has_legacy_remove_comments_setting && settings.remove_comments_on_accept_reject === undefined) {
 			settings.remove_comments_on_accept_reject = settings.remove_comments_on_accept;
@@ -277,7 +283,7 @@ export default class CommentatorPlugin extends Plugin {
 		if (new_settings === null)
 			await this.setSettings();
 		else {
-			const old_version = normalized_settings?.version;
+			const old_version = normalized_settings.version;
 			// EXPL: Migration code for upgrading to a new version
 			try {
 				if (old_version !== DEFAULT_SETTINGS.version || has_legacy_remove_comments_setting) {
