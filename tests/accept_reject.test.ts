@@ -33,8 +33,9 @@ function makeComment(from: number, to: number, text: string) {
 
 function getChangeSpec(change: ChangeSpec) {
 	if (
-		typeof change !== "object" || !change ||
-		!("from" in change) || !("to" in change) || !("insert" in change)
+		typeof change !== "object" ||
+		change === null ||
+		!["from", "to", "insert"].every((prop) => prop in change)
 	) {
 		throw new Error("Expected a simple ChangeSpec object");
 	}
