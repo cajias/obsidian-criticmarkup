@@ -1,14 +1,25 @@
 // Initialize globals that are needed by Obsidian modules
 if (typeof globalThis !== 'undefined') {
 	// Mock createDiv function
-	(globalThis as any).createDiv = (className?: string | string[]): HTMLDivElement => {
+	(globalThis as any).createDiv = (clsOrInfo?: string | string[] | { cls?: string | string[]; text?: string }): HTMLDivElement => {
 		try {
 			const div = document.createElement('div');
-			if (className) {
-				if (Array.isArray(className)) {
-					div.classList.add(...className);
+			if (clsOrInfo) {
+				if (typeof clsOrInfo === 'string') {
+					div.classList.add(clsOrInfo);
+				} else if (Array.isArray(clsOrInfo)) {
+					div.classList.add(...clsOrInfo);
 				} else {
-					div.classList.add(className);
+					if (clsOrInfo.cls) {
+						if (Array.isArray(clsOrInfo.cls)) {
+							div.classList.add(...clsOrInfo.cls);
+						} else {
+							div.classList.add(clsOrInfo.cls);
+						}
+					}
+					if (clsOrInfo.text) {
+						div.textContent = clsOrInfo.text;
+					}
 				}
 			}
 			return div;
@@ -19,14 +30,25 @@ if (typeof globalThis !== 'undefined') {
 	};
 
 	// Mock createSpan function
-	(globalThis as any).createSpan = (className?: string | string[]): HTMLSpanElement => {
+	(globalThis as any).createSpan = (clsOrInfo?: string | string[] | { cls?: string | string[]; text?: string }): HTMLSpanElement => {
 		try {
 			const span = document.createElement('span');
-			if (className) {
-				if (Array.isArray(className)) {
-					span.classList.add(...className);
+			if (clsOrInfo) {
+				if (typeof clsOrInfo === 'string') {
+					span.classList.add(clsOrInfo);
+				} else if (Array.isArray(clsOrInfo)) {
+					span.classList.add(...clsOrInfo);
 				} else {
-					span.classList.add(className);
+					if (clsOrInfo.cls) {
+						if (Array.isArray(clsOrInfo.cls)) {
+							span.classList.add(...clsOrInfo.cls);
+						} else {
+							span.classList.add(clsOrInfo.cls);
+						}
+					}
+					if (clsOrInfo.text) {
+						span.textContent = clsOrInfo.text;
+					}
 				}
 			}
 			return span;

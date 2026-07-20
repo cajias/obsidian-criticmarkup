@@ -114,7 +114,7 @@
   notices={[
     {
       type: "info",
-      text: "When enabled, comment threads attached to a suggestion are removed when the suggestion is accepted or rejected",
+      text: "When enabled, comment threads attached to a suggestion are removed when the suggestion is accepted or rejected.",
     },
   ]}
 >

@@ -14,7 +14,7 @@ module.exports = {
 	moduleDirectories: ["node_modules", "src", "tests"],
 	moduleFileExtensions: ['js', 'ts'],
 	moduleNameMapper: {
-		"obsidian": "<rootDir>/__mocks__/obsidian.ts",
+		"^obsidian$": "<rootDir>/__mocks__/obsidian.ts",
 	},
 
 	setupFilesAfterEnv: ["jest-expect-message"],
