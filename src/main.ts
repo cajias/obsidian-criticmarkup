@@ -102,8 +102,8 @@ export default class CommentatorPlugin extends Plugin {
 	 */
 	normalizeSettings(new_settings: PluginSettings | null) {
 		const settings = Object.assign({}, new_settings ?? {}) as LegacyPluginSettings;
-		const has_legacy_remove_comments_setting = "remove_comments_on_accept" in settings;
-		if (has_legacy_remove_comments_setting && settings.remove_comments_on_accept_reject === undefined) {
+		const has_legacy_remove_comments_setting = Object.prototype.hasOwnProperty.call(settings, "remove_comments_on_accept");
+		if (has_legacy_remove_comments_setting && settings.remove_comments_on_accept_reject === undefined && typeof settings.remove_comments_on_accept === "boolean") {
 			settings.remove_comments_on_accept_reject = settings.remove_comments_on_accept;
 		}
 		delete settings.remove_comments_on_accept;
