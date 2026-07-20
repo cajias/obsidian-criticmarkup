@@ -1,3 +1,5 @@
+import { StateField } from "@codemirror/state";
+
 // Initialize globals that are needed by Obsidian modules
 if (typeof globalThis !== 'undefined') {
 	// Mock createDiv function
@@ -148,8 +150,12 @@ export class Component {
 	removeChild<T extends Component>(_child: T): T { return _child; }
 }
 
-// Mock StateField for editorEditorField
-export const editorEditorField = Symbol('editorEditorField');
+// Mock StateField for editorEditorField so state.field(editorEditorField) works
+// in tests without throwing. Returns null since tests don't need a real EditorView.
+export const editorEditorField = StateField.define<any>({
+	create: () => null,
+	update: (value) => value,
+});
 
 /** @public */
 export interface RequestUrlParam {
