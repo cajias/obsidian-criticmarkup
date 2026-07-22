@@ -31,26 +31,26 @@
 				<Button
                     icon="message-square-off"
                     tooltip={"Delete comment thread"}
-                    onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()))}
+                    onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, false), true)}
 				/>
 			{:else}
 				<Button
                     icon="cross"
                     tooltip={"Delete comment"}
-                    onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()))}
+                    onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, false), true)}
 				/>
 			{/if}
 
 		{:else if entry.range.type !== SuggestionType.HIGHLIGHT}
 			<Button
                 icon="check"
-                tooltip={"Accept change" + (entry.range.replies.length ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.accept()))}
+                tooltip={"Accept change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept_reject ? " (and delete thread)" : "")}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.accept(), app, file, ranges, plugin.settings.remove_comments_on_accept_reject), false)}
 			/>
 			<Button
                 icon="cross"
-                tooltip={"Reject change" + (entry.range.replies.length ? " (and delete thread)" : "")}
-                onClick={() => applyRangeEditsToVault(plugin, [entry], applyToFile.bind(null, (range, _) => range.reject()))}
+                tooltip={"Reject change" + (entry.range.replies.length && plugin.settings.remove_comments_on_accept_reject ? " (and delete thread)" : "")}
+                onClick={() => applyRangeEditsToVault(plugin, [entry], (app, file, ranges) => applyToFile((range, _) => range.reject(), app, file, ranges, plugin.settings.remove_comments_on_accept_reject), false)}
 			/>
 		{/if}
 

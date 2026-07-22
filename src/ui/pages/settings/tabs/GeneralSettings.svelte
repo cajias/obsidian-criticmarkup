@@ -108,6 +108,27 @@
   {/snippet}
 </SettingItem>
 
+<SettingItem
+  name="Remove comments on accept/reject"
+  type="toggle"
+  notices={[
+    {
+      type: "info",
+      text: "When enabled, comment threads attached to a suggestion are removed when the suggestion is accepted or rejected.",
+    },
+  ]}
+>
+  {#snippet control()}
+    <Toggle
+      value={plugin.settings.remove_comments_on_accept_reject}
+      onChange={(value) => {
+        plugin.settings.remove_comments_on_accept_reject = value;
+        plugin.saveSettings();
+      }}
+    />
+  {/snippet}
+</SettingItem>
+
 <SettingItem name="Database" type="heading" />
 
 <SettingItem
