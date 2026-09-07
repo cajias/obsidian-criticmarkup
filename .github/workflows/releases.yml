@@ -38,6 +38,20 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Update Obsidian version history
+        env:
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          min_app_version=$(jq -r '.minAppVersion' manifest.json)
+          jq --arg version "$TAG_NAME" --arg min_app_version "$min_app_version" \
+            '.[$version] = $min_app_version' versions.json > versions.json.tmp
+          mv versions.json.tmp versions.json
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add versions.json
+          git commit -m "chore(release): record $TAG_NAME [skip ci]"
+          git push origin HEAD:main
+
       - name: Build plugin
         env:
           TAG_NAME: ${{ needs.release-please.outputs.tag_name }}

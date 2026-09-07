@@ -1,4 +1,5 @@
 {
+  "include-v-in-tag": false,
   "packages": {
     ".": {
       "release-type": "node",
@@ -6,6 +7,11 @@
         {
           "type": "json",
           "path": "manifest.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "manifest-beta.json",
           "jsonpath": "$.version"
         }
       ]
